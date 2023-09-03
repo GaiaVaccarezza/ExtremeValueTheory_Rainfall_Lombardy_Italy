@@ -1,7 +1,7 @@
 main_folder <- 'C:/Users/39346/OneDrive/Desktop/THESIS'
 setwd(main_folder)
 
-###AUTOCORRELATION FUNCTION]###
+###AUTOCORRELATION FUNCTION###
 ##daily##
 data <- read.csv("daily_278.csv", header = TRUE)
 stations <- colnames(data)
@@ -84,8 +84,8 @@ for(i in 1:278){
 }
 dev.off()
 
-###PARETO-TYPE DISTRIBUTION###
-##pareto qq
+###PARETO-TYPE DISTRIBUTION### 
+##pareto qq##
 data <- read.csv("monthly_aggregate_282_381_160.csv", header = TRUE)
 data <- sapply(data[,], as.numeric)
 pdf("C:/Users/39346/OneDrive/Desktop/THESIS/PARETO_QQ_160.pdf")
@@ -97,8 +97,8 @@ for(i in 1:160){
 dev.off()
 
 
-###EV index###
-##hill estimator##
+###FIRST STEP OF MES ESTIMATION - EV INDEX ESTIMATION###
+##estimation through hill estimator##
 data <- read.csv("monthly_aggregate_282_381_160.csv", header = TRUE)
 data <- sapply(data[,], as.numeric)
 pdf("C:/Users/39346/OneDrive/Desktop/THESIS/HILL_tailindex_160.pdf")
@@ -119,7 +119,7 @@ for(j in 1:160){
 	axis(1, at = minor_tick_positions, labels = FALSE, tck = -0.015)
 	abline(h=0, col=2, lty=4, lwd=2)
 	abline(h=0.5, col=2, lty=4, lwd=2)
-	#abline(v = list_ranges[j,1], col = "red", lty = 2)
+	#abline(v = list_ranges[j,1], col = "red", lty = 2)  #to check after the stability of the range
 	#abline(v = list_ranges[j,2], col = "red", lty = 2)
 	}
 dev.off()
@@ -142,7 +142,7 @@ c(32,37), c(18,23), c(20,25), c(15,20), c(23,28), c(32,37), c(30,35), c(32,37), 
 c(26,31), c(25,30), c(22,27), c(30,35), c(23,28), c(23,28), c(28,33), c(35,40), c(28,33), c(30,35),
 c(27,32), c(22,27), c(22,27), c(21,26), c(20,25), c(30,35), c(31,36), c(25,30), c(20,25), c(20,25),
 c(17,22), c(31,36), c(25,30), c(30,35), c(15,20), c(30,35), c(23,28), c(30,35), c(23,28), c(22,27))
-list_ranges <-  matrix(vect, ncol = 2, byrow = TRUE)
+list_ranges <-  matrix(vect, ncol = 2, byrow = TRUE)  #intervals of lenght 5 chosen for the MES estimation
 
 #seasons
 data <- read.csv("monthly_aggregate_282_381_160_seasons_dummy_eautunno.csv", header = TRUE)
@@ -156,7 +156,7 @@ for(j in 1:160){
 	sorted_vector <- sort(vector, decreasing = TRUE)
 
 	for(i in 1:nk){
-  	# estimates the tail index by the Hill estimator
+  	# estimates the tail index by the Hill estimator to compare with regression EV index estimates
 	  #tk[i] <- sorted_vector[kk[i]]
 	  temp <- HTailIndex(vector, kk[i], TRUE, varType = "asym-Ind")
 	  SPTindexHill[i, ] <-  temp$gammaHat
@@ -170,7 +170,7 @@ for(j in 1:160){
 	t <- sorted_vector[seq(10, 42, by = 2)] 
 	k1 <- seq(10, 42, by = 2)
 	nt <- length(t)
-	indexML_0 <- array(0, c(nt,1))  #estimates the tail index by the ML estimator without covariate
+	indexML_0 <- array(0, c(nt,1))  #estimates the tail index by the ML estimator without covariate (also used as a comparison) 
 
 	for(i in 1:nt){
   		temp <- tryCatch(
@@ -195,7 +195,7 @@ for(j in 1:160){
     		)}}
 
 	
-	matrix_data <- cbind(data[, j], data[, "autunno_prim"])  
+	matrix_data <- cbind(data[, j], data[, "autunno_prim"])  #estimates the tail index by the ML estimator with autumn_spring
 	matrix_data <- as.data.frame(matrix_data)
 	
 	#max_value <- sorted_vector[10]
@@ -203,7 +203,7 @@ for(j in 1:160){
 	t <- sorted_vector[seq(10, 42, by = 2)] 
 	k1 <- seq(10, 42, by = 2)
 	nt <- length(t)
-	indexML <- array(0, c(nt,2)) #estimates the tail index by the ML estimator with autumn_spring 
+	indexML <- array(0, c(nt,2))  
 
 	for(i in 1:nt){
   		temp <- tryCatch(
@@ -230,7 +230,7 @@ for(j in 1:160){
     		)}}
 
 	vector <- as.vector(data[, j])
-	matrix_data <- cbind(data[, j], data[, "autunno_inverno"])  
+	matrix_data <- cbind(data[, j], data[, "autunno_inverno"])    #estimates the tail index by the ML estimator with autumn_winter
 	matrix_data <- as.data.frame(matrix_data)
 	sorted_vector <- sort(vector, decreasing = TRUE)
 	#max_value <- sorted_vector[10]
@@ -238,7 +238,7 @@ for(j in 1:160){
 	t <- sorted_vector[seq(10, 42, by = 2)] 
 	k1 <- seq(10, 42, by = 2)
 	nt <- length(t)
-	indexML1 <- array(0, c(nt,2)) #estimates the tail index by the ML estimator with autumn_winter
+	indexML1 <- array(0, c(nt,2))
 
 	for(i in 1:nt){
   		temp <- tryCatch(
@@ -266,7 +266,7 @@ for(j in 1:160){
     		)}}
 
 	vector <- as.vector(data[, j])
-	matrix_data <- cbind(data[, j], data[, "autunno_est"])  
+	matrix_data <- cbind(data[, j], data[, "autunno_est"])    #estimates the tail index by the ML estimator with autumn_summer
 	matrix_data <- as.data.frame(matrix_data)
 	sorted_vector <- sort(vector, decreasing = TRUE)
 	#max_value <- sorted_vector[10]
@@ -274,7 +274,7 @@ for(j in 1:160){
 	t <- sorted_vector[seq(10, 42, by = 2)] 
 	k1 <- seq(10, 42, by = 2)
 	nt <- length(t)
-	indexML2 <- array(0, c(nt,2)) #estimates the tail index by the ML estimator with autumn_summer
+	indexML2 <- array(0, c(nt,2))
 	for(i in 1:nt){
   		temp <- tryCatch(
 			fevd(V1,  matrix_data , threshold = t[i], shape.fun = ~V2, type="GP", time.units = "months"),
@@ -301,7 +301,7 @@ for(j in 1:160){
     		)}}	
 
 	vector <- as.vector(data[, j])
-	matrix_data <- cbind(data[, j], data[, "autunno"])  
+	matrix_data <- cbind(data[, j], data[, "autunno"])  #estimates the tail index by the ML estimator with autumn
 	matrix_data <- as.data.frame(matrix_data)
 	sorted_vector <- sort(vector, decreasing = TRUE)
 	#max_value <- sorted_vector[10]
@@ -309,7 +309,7 @@ for(j in 1:160){
 	t <- sorted_vector[seq(10, 42, by = 2)] 
 	k1 <- seq(10, 42, by = 2) 
 	nt <- length(t)
-	indexML3 <- array(0, c(nt,2)) #estimates the tail index by the ML estimator with autumn
+	indexML3 <- array(0, c(nt,2)) 
 
 	for(i in 1:nt){
   		temp <- tryCatch(
@@ -449,7 +449,7 @@ for(j in 1:160){
     		)}}
 
 
-		indexML1_t <- array(0, c(nt,1))
+		indexML1_t <- array(0, c(nt,1))   #estimates for temperature at different levels (1.5,2.5, 5, 7.5, 10, 12.5)
 		indexML2_t <- array(0, c(nt,1))	
 		indexML3_t <- array(0, c(nt,1))
 		indexML4_t <- array(0, c(nt,1))
@@ -472,6 +472,7 @@ for(j in 1:160){
 			indexML3_t[y ] <- c(NA)
 			indexML4_t[y ] <- c(NA)
 			indexML5_t[y ] <- c(NA)
+			indexML6_t[y ] <- c(NA)
 			next
 		} else {
 		indexML1_t[y] <- tryCatch(
@@ -508,7 +509,7 @@ for(j in 1:160){
       		}
     		)
 		indexML4_t[y] <- tryCatch(
-			temp$results$par[2]+temp$results$par[3]*10,
+			temp$results$par[2]+temp$results$par[3]*7.5,
 			error = function(e) {
 				#ML_title <- "ML_extRemes_PROBLEM"
         			return(c(NA))  # Return a default value or 'NA'
@@ -519,6 +520,17 @@ for(j in 1:160){
       		}
     		)
 		indexML5_t[y] <- tryCatch(
+			temp$results$par[2]+temp$results$par[3]*10,
+			error = function(e) {
+				#ML_title <- "ML_extRemes_PROBLEM"
+        			return(c(NA))  # Return a default value or 'NA'
+      		},
+			warning = function(e) {
+				 #ML_title <- "ML_extRemes_PROBLEM"
+        			return(c(NA))  # Return a default value or 'NA'
+      		}
+    		)
+		indexML6_t[y] <- tryCatch(
 			temp$results$par[2]+temp$results$par[3]*12.5,
 			error = function(e) {
 				#ML_title <- "ML_extRemes_PROBLEM"
@@ -535,9 +547,10 @@ for(j in 1:160){
 		indexML3_t <- array(NA, c(nt,1))
 		indexML4_t <- array(NA, c(nt,1))
 		indexML5_t <- array(NA, c(nt,1))
+		indexML6_t <- array(NA, c(nt,1))
 		}
 
-		indexML1_u <- array(0, c(nt,1))
+		indexML1_u <- array(0, c(nt,1))  #estimates for humidity at different levels 75%, 80%, 85%, 90%
 		indexML2_u <- array(0, c(nt,1))	
 		indexML3_u <- array(0, c(nt,1))
 		indexML4_u <- array(0, c(nt,1))
@@ -629,7 +642,7 @@ for(j in 1:160){
       		}
     		)
 		if (is.null(temp)) {
-			indexML1_v[y ] <- c(NA)
+			indexML1_v[y ] <- c(NA)  #estimates for the wind speed at different levels 10m/s, 15m/s, 25m/s, 30m/s
 			indexML2_v[y ] <- c(NA)
 			indexML3_v[y ] <- c(NA)
 			indexML4_v[y ] <- c(NA)
@@ -687,7 +700,7 @@ for(j in 1:160){
 		indexML4_v <- array(NA, c(nt,1))
 		}
 
-		indexML1_r <- array(0, c(nt,1))
+		indexML1_r <- array(0, c(nt,1))   #estimates for solar radiation at different levels 25 W/m2, 50 W/m2
 		indexML2_r <- array(0, c(nt,1))		
 		if (colnames(data)[j] %in% colnames(data_r)) {
 			matrix_data <- cbind(data[, j], data_r[, colnames(data)[j]]) 
@@ -889,7 +902,7 @@ for(j in 1:160){
 
 	for(i in 1:nt){
   		temp <- tryCatch(
-			fevd(V1,  matrix_data , threshold = t[i], shape.fun = ~V2, type="GP", time.units = "months"),
+			fevd(V1,  matrix_data , threshold = t[i], shape.fun = ~exp(V2), type="GP", time.units = "months"),
 			error = function(e) {
         			return(NULL)  # Return a default value or 'NA'
       		}
@@ -924,7 +937,7 @@ for(j in 1:160){
 
 	for(i in 1:nt){
   		temp <- tryCatch(
-			fevd(V1,  matrix_data , threshold = t[i], shape.fun = ~V2, type="GP", time.units = "months"),
+			fevd(V1,  matrix_data , threshold = t[i], shape.fun = ~exp(V2), type="GP", time.units = "months"),
 			error = function(e) {
 				#ML_title <- "ML_extRemes_PROBLEM"
         			return(NULL)  # Return a default value or 'NA'
@@ -959,7 +972,7 @@ for(j in 1:160){
 	indexML2 <- array(0, c(nt,2)) #estimates the tail index by the ML estimator with autumn_summer
 	for(i in 1:nt){
   		temp <- tryCatch(
-			fevd(V1,  matrix_data , threshold = t[i], shape.fun = ~V2, type="GP", time.units = "months"),
+			fevd(V1,  matrix_data , threshold = t[i], shape.fun = ~exp(V2), type="GP", time.units = "months"),
 			error = function(e) {
 				#ML_title <- "ML_extRemes_PROBLEM"
         			return(NULL)  # Return a default value or 'NA'
@@ -995,7 +1008,7 @@ for(j in 1:160){
 
 	for(i in 1:nt){
   		temp <- tryCatch(
-			fevd(V1,  matrix_data , threshold = t[i], shape.fun = ~V2, type="GP", time.units = "months"),
+			fevd(V1,  matrix_data , threshold = t[i], shape.fun = ~exp(V2), type="GP", time.units = "months"),
 			error = function(e) {
 				#ML_title <- "ML_extRemes_PROBLEM"
         			return(NULL)  # Return a default value or 'NA'
@@ -1522,7 +1535,7 @@ legend("top", lty=c(1,1,2,1), col=c("black", "blue", "green", "magenta"), lwd=c(
 dev.off()
 
 
-###MES ESTIMATION - UNWEIGHTED ###
+###SECOND STEP OF MES ESTIMATION - UNWEIGHTED CASE ###
 ##MES with Hill vs with Coov - unweighted##
 coov <- read.csv("coovariate choice.csv", header = TRUE)
 
@@ -2219,11 +2232,12 @@ for(j in 1:160){
 }
 dev.off()
 
+#get the difference between prediction and real data to check if overfitting or underfitting or both
 Hill1 <- array(0, c(160))
 Hill2 <- array(0, c(160))
 Coov1 <- array(0, c(160))
 Coov2 <- array(0, c(160))
-#get the difference between prediction and real data to check if overfitting or underfitting or both
+
 for (i in 1:160) {
 	Hill1[j] <- (max(MES_1_avg[,j])-max(data[,j]))
 	Hill2[j] <- (max(MES_2[,j])-max(data[,j]))
@@ -2343,7 +2357,7 @@ for(j in 1:160){
 	v_ML <- list()
 	for (k1 in list_ranges[j,1]:list_ranges[j,2]){
 		temp <- HTailIndex(vector_x, k1, TRUE, varType = "asym-Ind")
-		v_ML <- append(v_ML, temp$gammaHat)
+		v_ML <- append(v_ML, temp$gammaHat) #called v_ML but it is the Hill EV index 
 	}
 	v_ML <- unlist(v_ML)
 	mean_tail_ML <- mean(v_ML)
@@ -2967,7 +2981,7 @@ for(j in 1:160){
 		indices_vector <- which(Y_w_mean > thresh)
 		selected_values <- vector_x[indices_vector]
 		sum_s <- sum(selected_values)
-		MES_2[i,j] <- ((kk[i]^mean_tail)*(1/kk[i]))*sum_s 			#if p=1/n
+		MES_2[i,j] <- ((kk[i]^mean_tail_ML)*(1/kk[i]))*sum_s 			#if p=1/n
 
 	if (!is.na(mean_tail_ML_c)) {
 	Y_w <- sweep(Y,2, weights_125, `*`)
@@ -3026,6 +3040,10 @@ for(j in 1:160){
 }
 dev.off()
 
+write.csv(MES_1_avg[37,], file = "MES_hill1_weight.csv", row.names = FALSE)
+write.csv(MES_2[37,], file = "MES_hill2_weight.csv", row.names = FALSE)
+write.csv(MES_3_avg[37,], file = "MES_cov1_weight.csv", row.names = FALSE)
+write.csv(MES_4[37,], file = "MES_cov2_weight.csv", row.names = FALSE)
 
 ##check the goodness of fit##
 Hill1 <- array(0, c(160))
@@ -4187,9 +4205,9 @@ library(ExtremeRisks)
 library(extRemes)
 main_folder <- 'C:/Users/39346/OneDrive/Desktop/THESIS'  #versione corretta
 setwd(main_folder)
-data <- read.csv("pred_29_stagioni.csv", header = TRUE) 
-data_t<- read.csv("new_stations_29_temp (2).csv", header = TRUE)
-data_v <- read.csv("new_stations_29_vento (1).csv", header = TRUE) 
+data <- read.csv("new_stations_29_seasons.csv", header = TRUE) 
+data_t<- read.csv("new_stations_29_temp.csv", header = TRUE)
+data_v <- read.csv("new_stations_29_vento.csv", header = TRUE) 
 data_r<- read.csv("new_stations_29_rad.csv", header = TRUE)               
 data_u<- read.csv("new_stations_29_umid.csv", header = TRUE)
 
@@ -4205,7 +4223,7 @@ list_ranges <-  matrix(vect, ncol = 2, byrow = TRUE)
 
 
 weights_t <- read.csv("norm_weights_29.csv", header = TRUE)
-coov <- read.csv("COOV29 - Copia di Foglio9 (1).csv", header = TRUE)
+coov <- read.csv("COOV29.csv", header = TRUE)
 
 pdf("C:/Users/39346/OneDrive/Desktop/THESIS/rainfall_analysis_unscaled_MES_WEIGHT_coov29.pdf", width=20, height=6)
 kk <- seq(5,41, by=1)  #by 1 may be too large 
