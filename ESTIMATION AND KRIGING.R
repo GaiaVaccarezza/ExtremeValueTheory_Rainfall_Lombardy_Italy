@@ -3948,7 +3948,7 @@ for(j in 1:29){
 	Y <- data[,-j]
 
 	#paiwise HILL&ML
-	weights <- weights_t[,j]
+	weights <- weights[,j]
 	for(z in 1:28){  
 		vector <- as.vector(Y[, z])		
 		sorted_vector <- sort(vector, decreasing = TRUE)
@@ -4222,7 +4222,7 @@ c(24,29), c(36,41), c(26,31), c(17,23), c(30,35))
 list_ranges <-  matrix(vect, ncol = 2, byrow = TRUE)
 
 
-weights_t <- read.csv("norm_weights_29.csv", header = TRUE)
+weights <- read.csv("norm_weights_29.csv", header = TRUE)
 coov <- read.csv("COOV29.csv", header = TRUE)
 
 pdf("C:/Users/39346/OneDrive/Desktop/THESIS/rainfall_analysis_unscaled_MES_WEIGHT_coov29.pdf", width=20, height=6)
@@ -4865,7 +4865,7 @@ for(j in 1:29){
 	Y <- data[,-j]
 
 	#paiwise HILL&ML
-	weights <- weights_t[,j]
+	weights <- weights[,j]
 	for(z in 1:28){  
 		vector <- as.vector(Y[, z])		
 		sorted_vector <- sort(vector, decreasing = TRUE)
